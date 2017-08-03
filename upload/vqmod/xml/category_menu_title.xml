@@ -1,0 +1,124 @@
+<modification>
+    <id>Category another menu title</id>
+    <version>1.0.0</version>
+    <vqmver>2.1.5</vqmver>
+    <author>Michal Landsman</author>
+
+    <!-- improve model about new column "name_menu" -->
+    <file name="admin/model/catalog/category.php">
+
+        <!-- getCategoryDescriptions() -->
+        <operation>
+            <search position="after"><![CDATA['name'             => $result['name'],]]></search>
+            <add><![CDATA['name_menu'             => $result['name_menu'],]]></add>
+        </operation>
+
+        <!-- public function getCategories($data = array()) -->
+        <operation>
+            <search position="replace" index="1"><![CDATA[GROUP_CONCAT(cd1.name ORDER BY cp.level SEPARATOR '&nbsp;&nbsp;&gt;&nbsp;&nbsp;') AS name]]></search>
+            <add><![CDATA[GROUP_CONCAT(cd1.name ORDER BY cp.level SEPARATOR '&nbsp;&nbsp;&gt;&nbsp;&nbsp;') AS name, GROUP_CONCAT(cd1.name_menu ORDER BY cp.level SEPARATOR '&nbsp;&nbsp;&gt;&nbsp;&nbsp;') AS name_menu]]></add>
+        </operation>
+
+        <!-- public public function addCategory($data), function editCategory($category_id, $data) -->
+        <operation>
+            <search position="replace"><![CDATA[, name = '" . $this->db->escape($value['name']) . "']]></search>
+            <add><![CDATA[, name = '" . $this->db->escape($value['name']) . "', name_menu = '" . $this->db->escape($value['name_menu']) . "']]></add>
+        </operation>
+
+    </file>
+
+
+    <!-- add languages -->
+    <file name="admin/language/cs-cz/catalog/category.php" error="skip">
+        <operation>
+            <search position="after"><![CDATA[
+				<?php
+			]]></search>
+            <add><![CDATA[
+                $_['entry_name_menu'] = 'Název pro menu';
+                $_['column_name_menu'] = 'Název pro menu';
+			]]></add>
+        </operation>
+    </file>
+
+    <file name="admin/language/en-gb/catalog/category.php" error="skip">
+        <operation>
+            <search position="after"><![CDATA[
+				<?php
+			]]></search>
+            <add><![CDATA[
+                $_['entry_name_menu'] = 'Name for menu';
+                $_['column_name_menu'] = 'Name for menu';
+			]]></add>
+        </operation>
+    </file>
+
+    <file name="admin/language/english/catalog/category.php" error="skip">
+        <operation>
+            <search position="after"><![CDATA[
+				<?php
+			]]></search>
+            <add><![CDATA[
+                $_['entry_name_menu'] = 'Name for menu';
+                $_['column_name_menu'] = 'Name for menu';
+			]]></add>
+        </operation>
+    </file>
+
+
+    <!-- data to controller -->
+    <file name="admin/controller/catalog/category.php">
+
+        <!-- improve method "protected function getList()" -->
+        <operation>
+            <search position="after"><![CDATA['name'        => $result['name'],]]></search>
+            <add><![CDATA['name_menu'        => $result['name_menu'],]]></add>
+        </operation>
+        <operation>
+            <search position="after"><![CDATA[$data['column_name'] = $this->language->get('column_name');]]></search>
+            <add><![CDATA[$data['column_name_menu'] = $this->language->get('column_name_menu');]]></add>
+        </operation>
+
+        <!-- improve method "protected function getForm()" -->
+        <operation>
+            <search position="after"><![CDATA[$data['entry_name'] = $this->language->get('entry_name');]]></search>
+            <add><![CDATA[$data['entry_name_menu'] = $this->language->get('entry_name_menu');]]></add>
+        </operation>
+
+    </file>
+
+
+    <!-- new column to table -->
+    <file name="admin/view/template/catalog/category_list.tpl">
+
+        <operation>
+            <search position="before"><![CDATA[<td class="text-right"><?php if ($sort == 'sort_order') { ?>]]></search>
+            <add><![CDATA[<td><?php echo $column_name_menu; ?></td>]]></add>
+        </operation>
+
+        <operation>
+            <search position="after"><![CDATA[<td class="text-left"><?php echo $category['name']; ?></td>]]></search>
+            <add><![CDATA[<td class="text-left"><?php echo $category['name_menu']; ?></td>]]></add>
+        </operation>
+
+    </file>
+
+
+    <!-- new input to category form -->
+    <file name="admin/view/template/catalog/category_form.tpl">
+        <operation>
+            <search position="before" offset="1"><![CDATA[<label class="col-sm-2 control-label" for="input-description<?php echo $language['language_id']; ?>"><?php echo $entry_description; ?></label>]]></search>
+            <add><![CDATA[
+
+                  <div class="form-group">
+                    <label class="col-sm-2 control-label" for="input-name-menu<?php echo $language['language_id']; ?>"><?php echo $entry_name_menu; ?></label>
+                    <div class="col-sm-10">
+                      <input type="text" name="category_description[<?php echo $language['language_id']; ?>][name_menu]" value="<?php echo isset($category_description[$language['language_id']]) ? $category_description[$language['language_id']]['name_menu'] : ''; ?>" placeholder="<?php echo $entry_name_menu; ?>" id="input-name<?php echo $language['language_id']; ?>" class="form-control" />
+                    </div>
+                  </div>
+
+            ]]></add>
+        </operation>
+    </file>
+
+</modification>

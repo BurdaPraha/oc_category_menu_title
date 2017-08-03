@@ -1,0 +1,13 @@
+{
+    "name": "burdapraha/oc_category_menu_title",
+    "description": "Improved categories about custom menu title (another than page title)",
+    "type": "vqmod-plugin",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Michal Landsman",
+            "email": "landsman@studioart.cz"
+        }
+    ],
+    "require": {}
+}
