@@ -121,7 +121,7 @@
         </operation>
     </file>
 
-    
+
     <!-- change menu title -->
     <file name="catalog/controller/common/header.php">
         <operation>
@@ -148,7 +148,7 @@
     </file>
 
     <file path="catalog/view/theme/*/template/" name="common/header.tpl,extension/module/category.tpl">
-        <operation>
+        <operation error="skip">
             <search position="replace"><![CDATA[<?php echo $category['name']; ?>]]></search>
             <add><![CDATA[<?php echo (isset($category['name_menu']) && !empty($category['name_menu']) ? $category['name_menu'] : $category['name']); ?>]]></add>
         </operation>
